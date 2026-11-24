@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Amaya's Graduation | Class of 2026</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- BACKGROUND AUDIO/VIDEO FILE (Drop your downloaded mp4/mp3 in music/bg-music.mp4) -->
+    <video id="bgMusicPlayer" src="music/bg-music.mp4" loop playsinline preload="auto" style="display:none;"></video>
+
+    <!-- RECOGNIZABLE BLURRED BEDROOM DESKTOP BACKDROP -->
+    <div class="living-room-bg"></div>
+
+    <!-- WRAPPER FOR PHONE + BROWN HAND & ARM -->
+    <div class="hand-phone-wrapper" id="handPhoneWrapper">
+        
+        <!-- Hand Palm & Extended Forearm/Wrist (Behind Phone) -->
+        <svg class="hand-back" viewBox="0 0 500 1250" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M55 340 C15 370, 5 440, 25 510 C42 568, 82 640, 108 750 L125 1250 L385 1250 L402 760 C425 650, 455 570, 468 480 C480 390, 470 290, 440 245 Z" fill="#6D432B"/>
+            <path d="M72 365 C42 405, 36 465, 52 525 L135 1250 L345 1250 L420 400 Z" fill="#5C3621" opacity="0.45"/>
+        </svg>
+
+        <!-- LEFT SIDE HARDWARE BUTTONS (Silent Switch + Volume Up / Down) -->
+        <div class="hardware-buttons-left">
+            <button class="hw-btn hw-mute" id="btnMute" onclick="toggleMuteMusic()" title="Silent Switch">
+                <span class="mute-indicator"></span>
+            </button>
+            <button class="hw-btn hw-vol-up" onclick="changeMusicVolume(0.15)" title="Volume Up">+</button>
+            <button class="hw-btn hw-vol-down" onclick="changeMusicVolume(-0.15)" title="Volume Down">−</button>
+        </div>
+
+        <!-- RIGHT SIDE HARDWARE BUTTON (Positioned cleanly above Index Finger) -->
+        <div class="hardware-buttons-right">
+            <button class="hw-btn hw-power" id="btnPower" onclick="pressPowerButton()" title="Lock / Power Button"></button>
+        </div>
+
+        <!-- THE IPHONE FRAME -->
+        <div class="phone-frame">
+            <!-- Screen Off / Sleep Overlay (Triggered by Side Power Button) -->
+            <div class="screen-sleep-overlay" id="screenSleepOverlay" onclick="wakePhoneFromSleep()">
+                <span>Tap screen or Power button to wake</span>
+            </div>
+
+            <!-- iOS Left-Edge Volume HUD Pill -->
+            <div class="ios-volume-hud" id="iosVolumeHud">
+                <div class="vol-hud-fill" id="volHudFill" style="height: 70%;"></div>
+                <span class="vol-hud-icon" id="volHudIcon">🔊</span>
+            </div>
+
+            <!-- Dynamic Island -->
+            <div class="dynamic-island"></div>
+            
+            <!-- Simulated iOS Status Bar -->
+            <div class="status-bar">
+                <span class="time">9:41</span>
+                <span class="icons">
+                    <span class="music-status-pill" id="musicStatusPill" onclick="openModal('modal-music')" title="Music Controls">🎵</span>
+                    <svg viewBox="0 0 18 12" width="16" height="11" fill="currentColor">
+                        <rect x="0" y="8" width="3" height="4" rx="1"/>
+                        <rect x="4.5" y="6" width="3" height="6" rx="1"/>
+                        <rect x="9" y="3" width="3" height="9" rx="1"/>
+                        <rect x="13.5" y="0" width="3" height="12" rx="1"/>
+                    </svg>
+                    <svg viewBox="0 0 16 12" width="15" height="11" fill="currentColor">
+                        <path d="M8 9.6a1.4 1.4 0 100 2.8 1.4 1.4 0 000-2.8zm-3.6-2.1a5.2 5.2 0 017.2 0l1.2-1.3a7 7 0 00-9.6 0l1.2 1.3zm-2.8-2.9a9.2 9.2 0 0112.8 0l1.2-1.3a11 11 0 00-15.2 0l1.2 1.3z"/>
+                    </svg>
+                    <svg viewBox="0 0 25 12" width="22" height="11" fill="currentColor">
+                        <rect x="0.5" y="0.5" width="21" height="11" rx="3" stroke="currentColor" fill="none" stroke-opacity="0.4"/>
+                        <rect x="2" y="2" width="18" height="8" rx="1.5"/>
+                        <path d="M23 4v4a1.5 1.5 0 000-4z" fill-opacity="0.5"/>
+                    </svg>
+                </span>
+            </div>
+
+            <!-- IOS TOP NOTIFICATION BANNER (Swipeable up to dismiss) -->
+            <div class="ios-toast-banner" id="iosToastBanner">
+                <div class="toast-icon" id="toastIcon">💡</div>
+                <div class="toast-content">
+                    <div class="toast-header">
+                        <span class="toast-app" id="toastApp">TIPS</span>
+                        <span class="toast-time">now</span>
+                    </div>
+                    <div class="toast-message" id="toastMessage">Swipe left to view more pages!</div>
+                </div>
+            </div>
+
+            <!-- ===================================================== -->
+            <!-- LOCK SCREEN + PASSCODE OVERLAY (CODE: 6292 / MAYA)    -->
+            <!-- ===================================================== -->
+            <div class="lock-screen" id="lockScreen" style="background-image: url('photos/background.jpg');">
+                <div class="lock-view" id="lockView">
+                    <div class="lock-header">
+                        <div class="lock-icon">🔒</div>
+                        <div class="lock-date">Friday, December 18</div>
+                        <div class="lock-clock">9:41</div>
+                    </div>
+
+                    <div class="lock-notification">
+                        <div class="notif-icon">🎓</div>
+                        <div class="notif-body">
+                            <div class="notif-top">
+                                <span class="notif-app">GRADUATION INVITE</span>
+                                <span class="notif-time">now</span>
+                            </div>
+                            <div class="notif-title">Amaya's Graduation • Dec 18</div>
+                            <div class="notif-text">Swipe up or click to unlock (Code: 6292 • MAYA)</div>
+                        </div>
+                    </div>
+
+                    <div class="lock-bottom">
+                        <p class="swipe-hint">Swipe up or click to unlock</p>
+                        <div class="home-indicator"></div>
+                    </div>
+                </div>
+
+                <!-- Passcode Keypad View -->
+                <div class="passcode-view" id="passcodeView">
+                    <div class="passcode-header">
+                        <div class="lock-icon-small">🔒</div>
+                        <p class="passcode-prompt">Enter Passcode</p>
+                        <p class="passcode-sub">Passcode: 6292 (MAYA)</p>
+                        <div class="passcode-dots" id="passcodeDots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+
+                    <div class="keypad">
+                        <button class="key" onclick="pressKey('1')">1<span>&nbsp;</span></button>
+                        <button class="key" onclick="pressKey('2')">2<span>ABC</span></button>
+                        <button class="key" onclick="pressKey('3')">3<span>DEF</span></button>
+                        <button class="key" onclick="pressKey('4')">4<span>GHI</span></button>
+                        <button class="key" onclick="pressKey('5')">5<span>JKL</span></button>
+                        <button class="key" onclick="pressKey('6')">6<span>MNO</span></button>
+                        <button class="key" onclick="pressKey('7')">7<span>PQRS</span></button>
+                        <button class="key" onclick="pressKey('8')">8<span>TUV</span></button>
+                        <button class="key" onclick="pressKey('9')">9<span>WXYZ</span></button>
+                        <div class="key-empty"></div>
+                        <button class="key" onclick="pressKey('0')">0<span>&nbsp;</span></button>
+                        <button class="key-action" onclick="deleteKey()">Delete</button>
+                    </div>
+
+                    <div class="passcode-footer">
+                        <span onclick="hidePasscode()">Cancel</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================================================== -->
+            <!-- STYLIZED HOME SCREEN AREA (4 PAGES + DOCK)            -->
+            <!-- ===================================================== -->
+            <div class="phone-screen" id="phoneScreen" style="background-image: url('photos/background.jpg');">
+                <div class="wallpaper-overlay"></div>
+                
+                <!-- ================================================= -->
+                <!-- PAGE 1: MAIN INVITE + I AM + GOOGLE SEARCH        -->
+                <!-- ================================================= -->
+                <div class="home-screen active" id="screen1">
+                    
+                    <div class="widget-wrapper">
+                        <div class="widget-large">
+                            <div class="widget-large-tag">FRIDAY, DEC 18 • BALTIMORE</div>
+                            <div class="widget-large-title">Amaya's Graduation</div>
+                            <div class="widget-large-sub">Tap apps with red badges for itinerary &amp; RSVP 🎓</div>
+                        </div>
+                        <span class="app-label">Widgetsmith</span>
+                    </div>
+
+                    <div class="app-grid" style="margin-bottom: 12px;">
+                        <div class="app-icon" onclick="openModal('modal-details')">
+                            <span class="notif-badge">2</span>
+                            <div class="app-icon-bg" style="background: linear-gradient(135deg, #2c2c2e, #1c1c1e);">
+                                <span class="emoji-icon">🎓</span>
+                            </div>
+                            <span class="app-label">Details</span>
+                        </div>
+
+                        <div class="app-icon" onclick="openModal('modal-rsvp')">
+                            <span class="notif-badge">1</span>
+                            <div class="app-icon-bg" style="background: linear-gradient(135deg, #f9d5e5, #eeac99);">
+                                <span class="emoji-icon">💌</span>
+                            </div>
+                            <span class="app-label">RSVP</span>
+                        </div>
+
+                        <div class="app-icon" onclick="openModal('modal-photos')">
+                            <span class="notif-badge">13</span>
+                            <div class="app-icon-bg apple-photos-icon">
+                                <svg viewBox="0 0 60 60" width="44" height="44">
+                                    <rect x="26" y="5" width="8" height="18" rx="4" fill="#FF9500" opacity="0.9"/>
+                                    <rect x="26" y="5" width="8" height="18" rx="4" fill="#FFCC00" opacity="0.9" transform="rotate(45 30 30)"/>
+                                    <rect x="26" y="5" width="8" height="18" rx="4" fill="#34C759" opacity="0.9" transform="rotate(90 30 30)"/>
+                                    <rect x="26" y="5" width="8" height="18" rx="4" fill="#00C7BE" opacity="0.9" transform="rotate(135 30 30)"/>
+                                    <rect x="26" y="5" width="8" height="18" rx="4" fill="#007AFF" opacity="0.9" transform="rotate(180 30 30)"/>
+                                    <rect x="26" y="5" width="8" height="18" rx="4" fill="#5856D6" opacity="0.9" transform="rotate(225 30 30)"/>
+                                    <rect x="26" y="5" width="8" height="18" rx="4" fill="#AF52DE" opacity="0.9" transform="rotate(270 30 30)"/>
+                                    <rect x="26" y="5" width="8" height="18" rx="4" fill="#FF2D55" opacity="0.9" transform="rotate(315 30 30)"/>
+                                </svg>
+                            </div>
+                            <span class="app-label">Photos</span>
+                        </div>
+
+                        <div class="app-icon" onclick="openModal('modal-next')">
+                            <span class="notif-badge">1</span>
+                            <div class="app-icon-bg" style="background: linear-gradient(135deg, #e0c3fc, #8ec5fc);">
+                                <span class="emoji-icon">📖</span>
+                            </div>
+                            <span class="app-label">Guestbook</span>
+                        </div>
+                    </div>
+
+                    <div class="split-row" style="margin-bottom: 12px;">
+                        <div class="widget-square-wrap">
+                            <div class="widget-square iam-pink-widget">
+                                <span class="iam-badge">I am</span>
+                                <p class="iam-quote">I am stepping into my next chapter with grace, gratitude, and faith.</p>
+                            </div>
+                            <span class="app-label">I am</span>
+                        </div>
+
+                        <div class="mini-grid-2x2">
+                            <div class="app-icon placeholder-app" onclick="handlePlaceholderClick()">
+                                <div class="app-icon-bg" style="background-color: #d9b4a3;">
+                                    <span class="custom-app-text serif-dark">I am</span>
+                                </div>
+                                <span class="app-label">I am</span>
+                            </div>
+
+                            <div class="app-icon placeholder-app" onclick="handlePlaceholderClick()">
+                                <div class="app-icon-bg" style="background-color: #1f2247;">
+                                    <span class="zen-stones">
+                                        <i></i><i></i><i></i>
+                                    </span>
+                                </div>
+                                <span class="app-label">ScreenZen</span>
+                            </div>
+
+                            <div class="app-icon" onclick="openModal('modal-music')">
+                                <span class="notif-badge">♪</span>
+                                <div class="app-icon-bg" style="background-color: #f5f5f7;">
+                                    <span class="custom-app-text music-note">♫</span>
+                                </div>
+                                <span class="app-label">Music</span>
+                            </div>
+
+                            <div class="app-icon placeholder-app" onclick="handlePlaceholderClick()">
+                                <div class="app-icon-bg cal-icon">
+                                    <span class="cal-day">DEC</span>
+                                    <span class="cal-num">18</span>
+                                </div>
+                                <span class="app-label">Calendar</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="google-widget-wrap placeholder-app" onclick="handlePlaceholderClick()">
+                        <div class="google-search-widget">
+                            <div class="google-left">
+                                <span class="google-g">G</span>
+                                <span class="google-text">Search</span>
+                            </div>
+                            <div class="google-right">
+                                <span class="google-icon">🎙️</span>
+                                <span class="google-icon">📷</span>
+                            </div>
+                        </div>
+                        <span class="app-label">Google</span>
+                    </div>
+                </div>
+                
+                <!-- ================================================= -->
+                <!-- PAGE 2: PHOTO WIDGETS + INTERACTIVE NOTES + CASH APP -->
+                <!-- ================================================= -->
+                <div class="home-screen" id="screen2">
+                    <div class="split-row" style="margin-bottom: 12px;">
+                        <div class="widget-square-wrap">
+                            <div class="widget-square photo-widget">
+                                <img src="photos/widget1.jpeg" alt="Widget 1">
+                            </div>
+                            <span class="app-label">Widgetsmith</span>
+                        </div>
+
+                        <div class="mini-grid-2x2">
+                            <div class="app-icon" onclick="openModal('modal-cashapp')">
+                                <span class="notif-badge">1</span>
+                                <div class="app-icon-bg" style="background-color: #00d632;">
+                                    <span class="custom-app-text cash-dollar">$</span>
+                                </div>
+                                <span class="app-label">Cash App</span>
+                            </div>
+
+                            <div class="app-icon" onclick="openModal('modal-details')">
+                                <span class="notif-badge">2</span>
+                                <div class="app-icon-bg" style="background: linear-gradient(135deg, #34c759, #30b0c7);">
+                                    <span class="emoji-icon">📍</span>
+                                </div>
+                                <span class="app-label">Directions</span>
+                            </div>
+
+                            <div class="app-icon placeholder-app" onclick="handlePlaceholderClick()">
+                                <div class="app-icon-bg" style="background-color: #e60023;">
+                                    <span class="custom-app-text serif-white">P</span>
+                                </div>
+                                <span class="app-label">Pinterest</span>
+                            </div>
+
+                            <div class="app-icon" onclick="lockPhone()">
+                                <span class="notif-badge">•</span>
+                                <div class="app-icon-bg" style="background-color: #2c2c2e;">
+                                    <span class="emoji-icon">🔒</span>
+                                </div>
+                                <span class="app-label">Lock</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="split-row" style="margin-bottom: 12px;">
+                        <div class="mini-grid-2x2">
+                            <!-- Interactive Apple Notes App -> Opens Full Itinerary & Plan Ideas -->
+                            <div class="app-icon" onclick="openModal('modal-notes')">
+                                <span class="notif-badge">1</span>
+                                <div class="app-icon-bg apple-notes-icon">
+                                    <div class="notes-top-bar"></div>
+                                    <div class="notes-lines">
+                                        <span></span><span></span>
+                                    </div>
+                                </div>
+                                <span class="app-label">Notes</span>
+                            </div>
+
+                            <div class="app-icon placeholder-app" onclick="handlePlaceholderClick()">
+                                <div class="app-icon-bg" style="background-color: #0a0a0c;">
+                                    <span class="custom-app-text" style="color:#fff; font-size: 20px;">✦</span>
+                                </div>
+                                <span class="app-label">Divinely</span>
+                            </div>
+
+                            <div class="app-icon placeholder-app" onclick="handlePlaceholderClick()">
+                                <div class="app-icon-bg" style="background-color: #f46b8a;">
+                                    <span class="emoji-icon">🪶</span>
+                                </div>
+                                <span class="app-label">Flo</span>
+                            </div>
+
+                            <div class="app-icon placeholder-app" onclick="handlePlaceholderClick()">
+                                <div class="app-icon-bg" style="background-color: #5865f2;">
+                                    <span class="emoji-icon">💬</span>
+                                </div>
+                                <span class="app-label">Discord</span>
+                            </div>
+                        </div>
+
+                        <div class="widget-square-wrap">
+                            <div class="widget-square photo-widget">
+                                <img src="photos/widget2.jpeg" alt="Widget 2">
+                            </div>
+                            <span class="app-label">Widgetsmith</span>
+                        </div>
+                    </div>
+
+                    <div class="widget-wrapper" style="margin-bottom: 0;">
+                        <div class="widget-large iam-sage-widget" style="height: 128px;">
+                            <span class="iam-badge sage">I am</span>
+                            <p class="iam-quote wide">I am proud of everything I overcame to earn this degree, and ready for every blessing ahead.</p>
+                        </div>
+                        <span class="app-label">I am</span>
+                    </div>
+                </div>
+
+                <!-- ================================================= -->
+                <!-- PAGE 3: FULL SHOWCASE ("THE GRADUATE" SCREEN)     -->
+                <!-- ================================================= -->
+                <div class="home-screen" id="screen3">
+                    <div class="widget-wrapper" style="margin-bottom: 14px;">
+                        <div class="beauty-hero-widget" onclick="openModal('modal-photos')">
+                            <img src="photos/memory2.jpg" alt="Amaya Showcase">
+                            <div class="beauty-hero-overlay">
+                                <span class="beauty-tag">CLASS OF 2026</span>
+                                <div class="beauty-title">The Graduate ✨</div>
+                                <div class="beauty-sub">Tap to open Memory Lane album (13 photos) →</div>
+                            </div>
+                        </div>
+                        <span class="app-label">Photos</span>
+                    </div>
+
+                    <div class="split-row" style="margin-bottom: 12px;">
+                        <div class="widget-square-wrap">
+                            <div class="widget-square photo-widget" onclick="openModal('modal-photos')">
+                                <img src="photos/memory1.jpg" alt="Memory Preview 1">
+                            </div>
+                            <span class="app-label">Memory Lane</span>
+                        </div>
+
+                        <div class="widget-square-wrap">
+                            <div class="widget-square photo-widget" onclick="openModal('modal-photos')">
+                                <img src="photos/memory3.jpg" alt="Memory Preview 2">
+                            </div>
+                            <span class="app-label">Favorites</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================================================= -->
+                <!-- PAGE 4: APPLE APP LIBRARY (A-Z LIST + SEARCH)     -->
+                <!-- ================================================= -->
+                <div class="home-screen app-library-screen" id="screen4">
+                    <div class="app-library-search-wrap">
+                        <div class="app-library-search-box">
+                            <span class="search-glass">🔍</span>
+                            <input type="text" id="appLibrarySearch" placeholder="App Library" oninput="filterAppLibrary()" autocomplete="off">
+                            <button class="clear-search-btn" id="clearSearchBtn" onclick="clearAppSearch()">✕</button>
+                        </div>
+                    </div>
+
+                    <div class="app-library-body">
+                        <div class="app-library-list" id="appLibraryList"></div>
+                        <div class="alphabet-rail" id="alphabetRail"></div>
+                    </div>
+                </div>
+
+                <!-- Pulsing Swipe Hint Pill -->
+                <div class="swipe-pill-hint" id="swipePillHint" onclick="goToScreen(1)">
+                    Swipe for more →
+                </div>
+
+                <!-- 3 Clickable Pagination Dots + App Library Search Icon -->
+                <div class="pagination-dots" id="paginationDots">
+                    <span class="dot active" onclick="goToScreen(0)"></span>
+                    <span class="dot" onclick="goToScreen(1)"></span>
+                    <span class="dot" onclick="goToScreen(2)"></span>
+                    <span class="dot-search" onclick="goToScreen(3)" title="App Library">🔍</span>
+                </div>
+                
+                <!-- THE FIXED DOCK AT THE BOTTOM -->
+                <div class="phone-dock" id="phoneDock">
+                    <div class="app-icon" onclick="openModal('modal-rsvp')">
+                        <span class="notif-badge">1</span>
+                        <div class="app-icon-bg" style="background: #f9d5e5;"><span class="emoji-icon">💌</span></div>
+                    </div>
+                    <div class="app-icon" onclick="openModal('modal-notes')">
+                        <span class="notif-badge">1</span>
+                        <div class="app-icon-bg apple-notes-icon">
+                            <div class="notes-top-bar"></div>
+                            <div class="notes-lines">
+                                <span></span><span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-icon" onclick="openModal('modal-cashapp')">
+                        <span class="notif-badge">1</span>
+                        <div class="app-icon-bg" style="background: #00d632;"><span class="custom-app-text cash-dollar">$</span></div>
+                    </div>
+                    <div class="app-icon" onclick="openModal('modal-photos')">
+                        <span class="notif-badge">13</span>
+                        <div class="app-icon-bg apple-photos-icon">
+                            <svg viewBox="0 0 60 60" width="42" height="42">
+                                <rect x="26" y="5" width="8" height="18" rx="4" fill="#FF9500" opacity="0.9"/>
+                                <rect x="26" y="5" width="8" height="18" rx="4" fill="#FFCC00" opacity="0.9" transform="rotate(45 30 30)"/>
+                                <rect x="26" y="5" width="8" height="18" rx="4" fill="#34C759" opacity="0.9" transform="rotate(90 30 30)"/>
+                                <rect x="26" y="5" width="8" height="18" rx="4" fill="#00C7BE" opacity="0.9" transform="rotate(135 30 30)"/>
+                                <rect x="26" y="5" width="8" height="18" rx="4" fill="#007AFF" opacity="0.9" transform="rotate(180 30 30)"/>
+                                <rect x="26" y="5" width="8" height="18" rx="4" fill="#5856D6" opacity="0.9" transform="rotate(225 30 30)"/>
+                                <rect x="26" y="5" width="8" height="18" rx="4" fill="#AF52DE" opacity="0.9" transform="rotate(270 30 30)"/>
+                                <rect x="26" y="5" width="8" height="18" rx="4" fill="#FF2D55" opacity="0.9" transform="rotate(315 30 30)"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="home-indicator"></div>
+            </div> <!-- End Phone Screen -->
+        </div> <!-- End Phone Frame -->
+
+        <!-- ALL 5 FINGERS WRAPPING OVER FRONT EDGES OF PHONE -->
+        <svg class="hand-front" viewBox="0 0 500 1250" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Left Thumb (Reaches up to press Silent Switch & Volume buttons!) -->
+            <g class="left-thumb-group" id="leftThumbGroup">
+                <path d="M22 415 C52 405, 82 425, 84 458 C86 490, 58 515, 25 505 Z" fill="#7D4E33"/>
+                <path d="M55 428 C70 426, 78 440, 77 458 C76 474, 65 484, 52 480 C55 462, 56 445, 55 428 Z" fill="#9A684A" opacity="0.75"/>
+            </g>
+
+            <!-- Right Index Finger (Reaches up cleanly to press Power button!) -->
+            <g class="index-finger-group" id="indexFingerGroup">
+                <path d="M475 265 C442 260, 422 278, 422 302 C422 325, 442 338, 476 332 Z" fill="#7D4E33"/>
+                <path d="M442 282 C430 284, 426 293, 427 303 C428 313, 434 320, 444 318 Z" fill="#9A684A" opacity="0.7"/>
+            </g>
+
+            <!-- Right Middle Finger -->
+            <path d="M480 355 C444 350, 422 368, 422 394 C422 418, 444 432, 480 425 Z" fill="#75482E"/>
+            <path d="M442 373 C430 375, 426 385, 427 395 C428 405, 434 412, 444 410 Z" fill="#9A684A" opacity="0.7"/>
+
+            <!-- Right Ring Finger -->
+            <path d="M478 448 C445 444, 425 461, 425 485 C425 508, 445 520, 478 514 Z" fill="#6D432B"/>
+            <path d="M445 465 C433 467, 429 476, 430 486 C431 495, 437 501, 446 499 Z" fill="#9A684A" opacity="0.7"/>
+
+            <!-- Right Pinky Finger -->
+            <path d="M470 538 C442 535, 426 550, 426 571 C426 592, 442 602, 468 597 Z" fill="#643C25"/>
+            <path d="M444 553 C434 555, 430 563, 431 572 C432 580, 437 586, 445 584 Z" fill="#9A684A" opacity="0.7"/>
+        </svg>
+
+        <!-- Animated Swiping Thumb -->
+        <svg class="swiping-thumb" id="swipingThumb" viewBox="0 0 140 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="72" cy="115" rx="34" ry="85" fill="rgba(0,0,0,0.22)" />
+            <path d="M46 210 C42 155, 42 95, 46 52 C49 22, 62 10, 74 10 C86 10, 99 22, 102 52 C106 95, 106 155, 102 210 Z" fill="#7D4E33"/>
+            <path d="M56 26 C62 16, 86 16, 92 26 C94 42, 92 54, 74 54 C56 54, 54 42, 56 26 Z" fill="#9A684A" opacity="0.75"/>
+            <path d="M56 105 Q74 112 92 105" stroke="#5C3621" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+            <path d="M58 113 Q74 118 90 113" stroke="#5C3621" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+        </svg>
+
+    </div> <!-- End Hand + Phone Wrapper -->
+
+    <!-- ===================================================== -->
+    <!-- POP-UP APP MODALS                                     -->
+    <!-- ===================================================== -->
+    
+    <!-- Modal: Apple Notes (Full Itinerary & Plan Ideas) -->
+    <div id="modal-notes" class="modal">
+        <div class="modal-content apple-notes-modal">
+            <div class="notes-nav">
+                <span class="notes-back" onclick="closeModal('modal-notes')">‹ Folders</span>
+                <span class="notes-done" onclick="closeModal('modal-notes')">Done</span>
+            </div>
+            <div class="notes-date">December 18, 2026 at 9:41 AM</div>
+            <h2>Graduation Day Itinerary 🎓</h2>
+            
+            <div class="note-card-item">
+                <div class="note-time-tag">10:00 AM • FAMILY ONLY</div>
+                <strong>🎓 Graduation Ceremony</strong>
+                <p>Ticket capacity is super limited, so the 10 AM ceremony is family-only — the real celebration with everyone starts at dinner!</p>
+            </div>
+
+            <div class="note-card-item">
+                <div class="note-time-tag">7:00 PM • DINNER</div>
+                <strong>🍽️ Sagamore Pendry Baltimore</strong>
+                <p>1715 Thames St, Baltimore, MD 21231</p>
+                <a href="https://maps.google.com/?q=1715+Thames+St+Baltimore+MD+21231" target="_blank" class="note-link">Open in Maps →</a>
+            </div>
+
+            <div class="note-card-item">
+                <div class="note-time-tag">10:00 PM • AFTER-PARTY</div>
+                <strong>🥂 Drinks &amp; Party @ Bloom Bar</strong>
+                <p>2 E Read St #6, Baltimore, MD 21202</p>
+                <a href="https://maps.google.com/?q=2+E+Read+St+%236+Baltimore+MD+21202" target="_blank" class="note-link">Open in Maps →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 1: Details -->
+    <div id="modal-details" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('modal-details')">&times;</span>
+            <h2>🎓 Friday, Dec 18</h2>
+            <hr>
+            <p><strong>🎓 Ceremony • 10:00 AM (Family Only)</strong><br>
+            Limited tickets — join us for dinner &amp; the after-party!</p>
+
+            <p><strong>🍽️ Graduation Dinner • 7:00 PM</strong><br>
+            Sagamore Pendry Baltimore<br>
+            1715 Thames St, Baltimore, MD 21231</p>
+            <a href="https://maps.google.com/?q=1715+Thames+St+Baltimore+MD+21231" target="_blank" class="modal-button" style="margin-bottom: 14px;">📍 Pendry Directions</a>
+            
+            <p style="margin-top: 6px;"><strong>🥂 Drinks &amp; After-Party • 10:00 PM</strong><br>
+            Bloom Bar<br>
+            2 E Read St #6, Baltimore, MD 21202</p>
+            <a href="https://maps.google.com/?q=2+E+Read+St+%236+Baltimore+MD+21202" target="_blank" class="modal-button" style="background-color: #1c1c1e;">📍 Bloom Bar Directions</a>
+        </div>
+    </div>
+
+    <!-- Modal 2: RSVP (Embedded Live Google Form) -->
+    <div id="modal-rsvp" class="modal">
+        <div class="modal-content" style="padding: 18px; max-width: 355px;">
+            <span class="close-modal" onclick="closeModal('modal-rsvp')">&times;</span>
+            <h2>💌 RSVP • Dec 18</h2>
+            <hr style="margin-bottom: 10px;">
+            <div style="width: 100%; height: 390px; border-radius: 14px; overflow: hidden; background: #f9f9fb;">
+                <iframe 
+                    src="https://docs.google.com/forms/d/e/1FAIpQLSfrpyb3XwB1P2JrMnTp03Kzx4U4ibi5g8e5E-GjG3D9dwiWdA/viewform?embedded=true" 
+                    width="100%" 
+                    height="100%" 
+                    frameborder="0" 
+                    marginheight="0" 
+                    marginwidth="0">
+                    Loading RSVP Form…
+                </iframe>
+            </div>
+            <p style="font-size: 11.5px; text-align: center; margin: 8px 0 0; color: #8e8e93;">
+                Having trouble loading? <a href="https://forms.gle/wQ6BGAgYaZYrp91a6" target="_blank" style="color: #007aff; font-weight: 600;">Open RSVP in new tab →</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Modal 3: Apple Photos App -> "Memory Lane" Album (All 13 Photos) -->
+    <div id="modal-photos" class="modal">
+        <div class="modal-content apple-photos-app">
+            <div class="photos-app-nav">
+                <span class="photos-back" onclick="closeModal('modal-photos')">‹ Albums</span>
+                <span class="photos-nav-title">Memory Lane</span>
+                <span class="photos-done" onclick="closeModal('modal-photos')">Done</span>
+            </div>
+            <div class="photos-album-header">
+                <h3>Memory Lane</h3>
+                <p>Class of 2026 • 13 Photos (Scroll &amp; tap any photo)</p>
+            </div>
+            <div class="photo-grid">
+                <img src="photos/memory1.jpg" alt="Memory 1" onclick="openLightbox('photos/memory1.jpg')">
+                <img src="photos/memory2.jpg" alt="Memory 2" onclick="openLightbox('photos/memory2.jpg')">
+                <img src="photos/memory3.jpg" alt="Memory 3" onclick="openLightbox('photos/memory3.jpg')">
+                <img src="photos/memory4.jpg" alt="Memory 4" onclick="openLightbox('photos/memory4.jpg')">
+                <img src="photos/memory5.jpg" alt="Memory 5" onclick="openLightbox('photos/memory5.jpg')">
+                <img src="photos/memory6.jpg" alt="Memory 6" onclick="openLightbox('photos/memory6.jpg')">
+                <img src="photos/memory7.jpg" alt="Memory 7" onclick="openLightbox('photos/memory7.jpg')">
+                <img src="photos/memory8.jpg" alt="Memory 8" onclick="openLightbox('photos/memory8.jpg')">
+                <img src="photos/memory9.jpg" alt="Memory 9" onclick="openLightbox('photos/memory9.jpg')">
+                <img src="photos/memory10.jpg" alt="Memory 10" onclick="openLightbox('photos/memory10.jpg')">
+                <img src="photos/memory11.jpg" alt="Memory 11" onclick="openLightbox('photos/memory11.jpg')">
+                <img src="photos/memory12.jpg" alt="Memory 12" onclick="openLightbox('photos/memory12.jpg')">
+                <img src="photos/memory13.jpg" alt="Memory 13" onclick="openLightbox('photos/memory13.jpg')">
+            </div>
+        </div>
+    </div>
+
+    <!-- Full-Screen Photo Lightbox -->
+    <div id="photo-lightbox" class="modal" onclick="closeLightbox()">
+        <div class="lightbox-inner" onclick="event.stopPropagation()">
+            <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+            <img id="lightboxImg" src="" alt="Full View">
+        </div>
+    </div>
+
+    <!-- Modal 4: Guestbook (Direct Submission to Amaya's Google Form) -->
+    <div id="modal-next" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('modal-next')">&times;</span>
+            <h2>📖 Guestbook</h2>
+            <hr>
+            <p>Drop your best post-grad life advice, restaurant recs in Baltimore/DC, or favorite memory of us when you RSVP or see me Friday!</p>
+
+            <div style="margin-top: 12px;">
+                <input type="text" id="guestNameInput" placeholder="Your Name" style="width: 100%; border-radius: 12px; border: 1px solid #d1d1d6; padding: 10px 12px; font-family: inherit; font-size: 13.5px; margin-bottom: 8px; outline: none; background: #f9f9fb; color: #1c1c1e;">
+                
+                <textarea id="adviceInput" rows="3" placeholder="Write your advice, restaurant rec, or favorite memory for Amaya..." style="width: 100%; border-radius: 14px; border: 1px solid #d1d1d6; padding: 11px 12px; font-family: inherit; font-size: 13.5px; resize: none; outline: none; background: #f9f9fb; color: #1c1c1e;"></textarea>
+                
+                <button class="modal-button" id="sendAdviceBtn" onclick="submitDirectToGoogleForm()" style="width: 100%; margin-top: 10px; border: none; background-color: #1c1c1e;">
+                    💌 Send Directly to Amaya
+                </button>
+
+                <p id="adviceConfirm" style="display: none; font-size: 12.5px; color: #00a827; font-weight: 600; margin-top: 10px; margin-bottom: 0; text-align: center;">
+                    ✨ Sent! Amaya just got your note — see you Dec 18!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: Cash App Gift ($myashw) -->
+    <div id="modal-cashapp" class="modal">
+        <div class="modal-content" style="text-align: center;">
+            <span class="close-modal" onclick="closeModal('modal-cashapp')">&times;</span>
+            <h2>💚 Graduation Gift</h2>
+            <hr>
+            <p>Thank you so much for celebrating Amaya's graduation!</p>
+            <div class="cashtag-box" id="cashtagText">$myashw</div>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 14px;">
+                <a href="https://cash.app/$myashw" target="_blank" class="modal-button" style="background-color: #00d632;">Open Cash App</a>
+                <button class="modal-button" style="background-color: #1c1c1e; border: none;" onclick="copyCashtag()">Copy Tag</button>
+            </div>
+            <p id="copyConfirm" style="font-size: 12px; color: #00a827; margin-top: 8px; display: none;">Copied $myashw!</p>
+        </div>
+    </div>
+
+    <!-- Modal 6: Apple Music Controls with Custom Cover Photo -->
+    <div id="modal-music" class="modal">
+        <div class="modal-content" style="text-align: center;">
+            <span class="close-modal" onclick="closeModal('modal-music')">&times;</span>
+            <h2>🎵 Now Playing</h2>
+            <hr>
+            <div style="width: 100%; height: 195px; border-radius: 18px; overflow: hidden; margin-bottom: 16px; box-shadow: 0 10px 24px rgba(0,0,0,0.22); background: #1c1c1e;">
+                <img src="photos/musicbackground.jpg" alt="Music Cover" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+
+            <!-- Play / Pause & Mute Buttons -->
+            <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 16px;">
+                <button class="modal-button" onclick="togglePlayPauseMusic()" style="background-color: #1c1c1e; border: none; min-width: 115px;">
+                    ⏯️ Play / Pause
+                </button>
+                <button class="modal-button" onclick="toggleMuteMusic()" style="background-color: #ff3b30; border: none; min-width: 105px;">
+                    🔇 Mute
+                </button>
+            </div>
+
+            <!-- Volume Slider -->
+            <div style="display: flex; align-items: center; gap: 10px; padding: 0 8px;">
+                <span style="font-size: 14px;">🔈</span>
+                <input type="range" id="mobileVolumeSlider" min="0" max="1" step="0.05" value="0.7" oninput="setMusicVolumeDirect(this.value)" style="flex: 1; accent-color: #1c1c1e;">
+                <span style="font-size: 14px;">🔊</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
